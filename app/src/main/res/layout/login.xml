@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
+
+
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_centerHorizontal="true"
+                  android:layout_centerVertical="true"
+                  android:orientation="vertical"
+                  android:background="@color/colorPrimaryDark"
+                  android:padding="10dp"
+                  android:id="@+id/login">
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="@string/login_with_rosefire"
+                  android:textColor="@color/colorSecondary"
+                  android:textAlignment="center"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:textColorHint="@color/colorSecondary"
+                android:id="@+id/username_input"
+                android:hint="@string/username"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:textColorHint="@color/colorSecondary"
+                android:id="@+id/password_input"
+                android:hint="@string/password"/>
+        <Button android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/submit"/>
+    </LinearLayout>
+
+    <TextView
+            android:text="@string/app_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:id="@+id/app_title"
+            android:textSize="50sp"
+            android:textAlignment="center"
+            android:textColor="@color/colorSecondary"
+            android:layout_marginTop="24dp"/>
+</RelativeLayout>
