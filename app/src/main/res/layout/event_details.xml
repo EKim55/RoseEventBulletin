@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+
+    <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/header_table"
+            android:background="@color/colorPrimary">
+        <TableRow android:padding="10dp">
+            <TextView
+                android:text="@string/event_title"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textColor="@color/colorSecondary"
+                android:textSize="20sp"
+            />
+            <TextView
+                android:text="@string/event_date"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textColor="@color/colorSecondary"
+                android:textSize="20sp"
+            />
+        </TableRow>
+        <TableRow android:padding="10dp">
+            <TextView
+                android:text="@string/event_host"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textColor="@color/colorSecondary"
+                android:textSize="20sp"
+            />
+            <TextView
+                android:text="@string/event_location"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textColor="@color/colorSecondary"
+                android:textSize="20sp"
+            />
+        </TableRow>
+    </TableLayout>
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tint="@color/colorSecondary"
+            android:backgroundTint="@color/colorSecondaryBlue"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:src="@android:drawable/ic_input_add"
+            android:layout_below="@+id/header_table"
+            android:layout_marginTop="-22dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"/>
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/header_table"
+            android:text="@string/lorum_ipsum"
+            android:padding="20dp"
+            android:textSize="20sp"
+            android:textColor="@color/colorSecondary"
+            android:background="@color/colorPrimaryDark"/>
+</RelativeLayout>
