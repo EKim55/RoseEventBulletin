@@ -3,15 +3,24 @@ package edu.rosehulman.kime2.roseeventbulletin
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, ListFragment.OnEventSelectedListener {
+    override fun onEventSelected(event: Event) {
+        Log.d("EVENT_SELECTION", "Clicked on event")
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, EventDetailFragment.newInstance(event), getString(R.string.event_list_stack))
+        ft.commit()
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,8 +28,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            val ft = supportFragmentManager.beginTransaction()
+            ft.replace(R.id.fragment_container, EditEventFragment(), getString(R.string.event_list_stack))
+            ft.commit()
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -57,26 +67,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
+        var switchTo: Fragment? = null
         when (item.itemId) {
-            R.id.nav_camera -> {
-                // Handle the camera action
+            R.id.nav_events -> {
+                switchTo = ListFragment()
             }
-            R.id.nav_gallery -> {
+            R.id.nav_map -> {
 
             }
-            R.id.nav_slideshow -> {
+            R.id.nav_profile-> {
 
             }
-            R.id.nav_manage -> {
-
-            }
-            R.id.nav_share -> {
-
-            }
-            R.id.nav_send -> {
-
-            }
+        }
+        if (switchTo != null) {
+            val ft = supportFragmentManager.beginTransaction()
+            ft.replace(R.id.fragment_container, switchTo, getString(R.string.event_list_stack))
+            ft.commit()
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
