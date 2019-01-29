@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.nav_profile-> {
-
+                switchTo = ProfileFragment()
             }
         }
         if (switchTo != null) {

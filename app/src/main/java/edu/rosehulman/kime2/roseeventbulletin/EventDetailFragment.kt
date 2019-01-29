@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.event_details.view.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -39,6 +40,7 @@ class EventDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        activity!!.fab.hide()
         val view = inflater.inflate(R.layout.event_details, container, false)
         view.event_detail_title.text = event?.name
         view.event_detail_date.text = event?.date.toString()

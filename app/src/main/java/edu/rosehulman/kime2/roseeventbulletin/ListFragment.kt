@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import kotlinx.android.synthetic.main.app_bar_main.*
 import java.lang.RuntimeException
 
 // TODO: Rename parameter arguments, choose names that match
@@ -36,6 +37,7 @@ class ListFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        activity!!.fab.show()
         val view = inflater.inflate(R.layout.event_list, container, false) as RecyclerView
         adapter = ListAdapter(activity, listener)
         view.setHasFixedSize(true)
