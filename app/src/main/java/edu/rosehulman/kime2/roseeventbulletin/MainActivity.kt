@@ -18,8 +18,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         Log.d("EVENT_SELECTION", "Clicked on event")
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, EventDetailFragment.newInstance(event), getString(R.string.event_list_stack))
+        ft.addToBackStack("list")
         ft.commit()
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fab.setOnClickListener { view ->
             val ft = supportFragmentManager.beginTransaction()
             ft.replace(R.id.fragment_container, EditEventFragment(), getString(R.string.event_list_stack))
+            ft.addToBackStack("create")
             ft.commit()
         }
 
@@ -82,6 +83,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (switchTo != null) {
             val ft = supportFragmentManager.beginTransaction()
             ft.replace(R.id.fragment_container, switchTo, getString(R.string.event_list_stack))
+            while (supportFragmentManager.backStackEntryCount > 0) {
+                supportFragmentManager.popBackStackImmediate()
+            }
             ft.commit()
         }
 

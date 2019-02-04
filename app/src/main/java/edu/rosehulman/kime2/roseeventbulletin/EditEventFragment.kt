@@ -47,7 +47,14 @@ class EditEventFragment : Fragment() {
             val user = User()
             // TODO: Add input validation
             val event = Event(event_title_input.text.toString(), event_description_input.text.toString(), event_date_input.text.toString().toLong(), user, location, ArrayList(), ArrayList())
-            eventsRef.add(event)
+            eventsRef.add(event).addOnSuccessListener {
+                val ft = activity!!.supportFragmentManager.beginTransaction()
+                ft.replace(R.id.fragment_container, EventDetailFragment.newInstance(event), getString(R.string.event_list_stack))
+                ft.commit()
+            }
+        }
+        view.cancel_button.setOnClickListener {
+            activity!!.onBackPressed()
         }
         activity!!.fab.hide()
         return view

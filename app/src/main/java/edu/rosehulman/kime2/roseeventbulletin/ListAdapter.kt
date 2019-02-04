@@ -13,10 +13,6 @@ class ListAdapter(val context: Context?, var listener: ListFragment.OnEventSelec
     var events = ArrayList<Event>()
     val eventsRef = FirebaseFirestore.getInstance().collection("events")
 
-    init {
-        events.add(Event())
-        events.add(Event("name2"))
-    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.event_row, parent, false)
         return EventHolder(view, this)
