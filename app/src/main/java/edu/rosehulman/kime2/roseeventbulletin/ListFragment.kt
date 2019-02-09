@@ -16,8 +16,7 @@ import java.lang.RuntimeException
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val ARG_UID = "ARG_UID"
 
 /**
  * A simple [Fragment] subclass.
@@ -64,6 +63,16 @@ class ListFragment : Fragment() {
 
     interface OnEventSelectedListener {
         fun onEventSelected(event: Event)
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(uid: String) =
+            ListFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_UID, uid)
+                }
+            }
     }
 }
 

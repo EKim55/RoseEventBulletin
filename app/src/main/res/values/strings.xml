@@ -37,4 +37,5 @@
     <string name="attending_events">Attending Events</string>
     <string name="hosted_events">Hosted Events</string>
     <string name="email">Email</string>
+    <string name="logout">Logout</string>
 </resources>

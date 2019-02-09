@@ -1,12 +1,10 @@
 package edu.rosehulman.kime2.roseeventbulletin
 
-import android.app.AlertDialog
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.google.firebase.firestore.*
-import org.w3c.dom.Document
 
 class ListAdapter(val context: Context?, var listener: ListFragment.OnEventSelectedListener?): RecyclerView.Adapter<EventHolder>() {
 
