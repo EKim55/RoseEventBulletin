@@ -52,7 +52,6 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorSecondary"
                 android:inputType="date"
-                android:ems="10"
                 android:textColorHint="@color/colorSecondary"
                 android:id="@+id/event_date_input"/>
 
@@ -106,7 +105,6 @@
                 android:ems="10"
                 android:textColorHint="@color/colorSecondary"
                 android:id="@+id/event_description_input"/>
-
     </LinearLayout>
 
     <Button

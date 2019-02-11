@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import com.google.firebase.auth.FirebaseAuth
 import edu.rosehulman.rosefire.Rosefire
 import android.content.Intent
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import layout.Constants
 
@@ -66,7 +65,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onEventSelected(event: Event) {
         Log.d("EVENT_SELECTION", "Clicked on event")
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_container, EventDetailFragment.newInstance(event), getString(R.string.event_list_stack))
+        ft.replace(R.id.fragment_container, EventDetailFragment.newInstance(event, loggedInUser), getString(R.string.event_list_stack))
         ft.addToBackStack("list")
         ft.commit()
     }

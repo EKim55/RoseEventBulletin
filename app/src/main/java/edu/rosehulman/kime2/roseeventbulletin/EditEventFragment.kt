@@ -1,6 +1,7 @@
 package edu.rosehulman.kime2.roseeventbulletin
 
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -8,11 +9,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.DatePicker
 import android.widget.TextView
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.create_edit_event.*
 import kotlinx.android.synthetic.main.create_edit_event.view.*
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,7 +28,6 @@ private const val ARG_UID = "ARG_UID"
  *
  */
 class EditEventFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var loggedInUser: String? = null
     val eventsRef = FirebaseFirestore.getInstance().collection("events")
     private val dataService = DataService()
@@ -63,13 +65,15 @@ class EditEventFragment : Fragment() {
                 ArrayList())
             eventsRef.add(event).addOnSuccessListener {
                 val ft = activity!!.supportFragmentManager.beginTransaction()
-                ft.replace(R.id.fragment_container, EventDetailFragment.newInstance(event), getString(R.string.event_list_stack))
+                ft.replace(R.id.fragment_container, EventDetailFragment.newInstance(event, loggedInUser!!), getString(R.string.event_list_stack))
                 ft.commit()
             }
         }
         view.cancel_button.setOnClickListener {
             activity!!.onBackPressed()
         }
+
+
         activity!!.fab.hide()
         return view
     }

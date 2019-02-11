@@ -2,6 +2,7 @@ package edu.rosehulman.kime2.roseeventbulletin
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import kotlin.collections.ArrayList
@@ -11,8 +12,8 @@ data class Event(var name: String = "event name",
                  var date: Long = 1,
                  var owner: String = "",
                  var location: String = "",
-                 var attendees: List<String> = ArrayList(),
-                 var tags: List<String> = ArrayList()
+                 var attendees: ArrayList<String> = ArrayList(),
+                 var tags: ArrayList<String> = ArrayList()
 ): Parcelable {
     @get:Exclude var id = ""
 
@@ -52,8 +53,8 @@ data class Event(var name: String = "event name",
             return arrayOfNulls(size)
         }
 
-        fun fromSnapshot(document: QueryDocumentSnapshot): Event {
-            val event = document.toObject(Event::class.java)
+        fun fromSnapshot(document: DocumentSnapshot): Event {
+            val event = document.toObject(Event::class.java)!!
             event.id = document.id
             return event
         }

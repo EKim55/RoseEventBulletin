@@ -7,8 +7,8 @@ data class User(var username: String = "username",
                 var profile_pic: String = "pic_link",
                 var name: String = "user's name",
                 var email: String = "email",
-                var attending: List<String> = ArrayList(),
-                var owned: List<String> = ArrayList()) {
+                var attending: ArrayList<String> = ArrayList(),
+                var owned: ArrayList<String> = ArrayList()) {
     @get:Exclude var id = ""
 
     companion object {

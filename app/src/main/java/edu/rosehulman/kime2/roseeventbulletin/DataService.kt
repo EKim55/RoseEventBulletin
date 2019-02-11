@@ -26,4 +26,37 @@ class DataService {
             .document(uid)
             .get()
     }
+    fun getEventByUid(uid: String): Task<DocumentSnapshot> {
+        return eventsRef
+            .document(uid)
+            .get()
+    }
+
+    fun setAttending(uid: String, eventId: String, isAttending: Boolean) {
+        if (isAttending) {
+            usersRef.document(uid).get().addOnSuccessListener {
+                val user = User.fromSnapShot(it)
+                user.attending.add(eventId)
+                usersRef.document(uid).set(user)
+            }
+
+            eventsRef.document(eventId).get().addOnSuccessListener {
+                val event = Event.fromSnapshot(it)
+                event.attendees.add(uid)
+                eventsRef.document(eventId).set(event)
+            }
+        } else {
+            usersRef.document(uid).get().addOnSuccessListener {
+                val user = User.fromSnapShot(it)
+                user.attending.remove(eventId)
+                usersRef.document(uid).set(user)
+            }
+
+            eventsRef.document(eventId).get().addOnSuccessListener {
+                val event = Event.fromSnapshot(it)
+                event.attendees.remove(uid)
+                eventsRef.document(eventId).set(event)
+            }
+        }
+    }
 }
