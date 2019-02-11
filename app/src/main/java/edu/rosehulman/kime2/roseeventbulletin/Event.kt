@@ -9,31 +9,34 @@ import kotlin.collections.ArrayList
 data class Event(var name: String = "event name",
                  var description: String = "event description",
                  var date: Long = 1,
-                 var owner: User = User(),
-                 var location: Location = Location(),
-                 var attendees: List<User> = ArrayList(),
+                 var owner: String = "",
+                 var location: String = "",
+                 var attendees: List<String> = ArrayList(),
                  var tags: List<String> = ArrayList()
 ): Parcelable {
     @get:Exclude var id = ""
+
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
         parcel.readLong(),
-        parcel.readParcelable(User::class.java.classLoader),
-        parcel.readParcelable(Location::class.java.classLoader),
-        parcel.createTypedArrayList(User),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.createStringArrayList(),
         parcel.createStringArrayList()
     ) {
+        id = parcel.readString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(name)
         parcel.writeString(description)
         parcel.writeLong(date)
-        parcel.writeParcelable(owner, flags)
-        parcel.writeParcelable(location, flags)
-        parcel.writeTypedList(attendees)
+        parcel.writeString(owner)
+        parcel.writeString(location)
+        parcel.writeStringList(attendees)
         parcel.writeStringList(tags)
+        parcel.writeString(id)
     }
 
     override fun describeContents(): Int {

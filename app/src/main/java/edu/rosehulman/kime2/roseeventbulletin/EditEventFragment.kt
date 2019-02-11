@@ -3,9 +3,11 @@ package edu.rosehulman.kime2.roseeventbulletin
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -14,8 +16,7 @@ import kotlinx.android.synthetic.main.create_edit_event.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val ARG_UID = "ARG_UID"
 
 /**
  * A simple [Fragment] subclass.
@@ -25,28 +26,41 @@ private const val ARG_PARAM2 = "param2"
  */
 class EditEventFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var loggedInUser: String? = null
     val eventsRef = FirebaseFirestore.getInstance().collection("events")
+    private val dataService = DataService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            loggedInUser = it.getString(ARG_UID)
         }
-
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.create_edit_event, container, false)
+        val locMap = HashMap<String, String>()
+        dataService.getAllLocations().addOnSuccessListener {
+            val locs = ArrayList<String>()
+            for (document in it.documents) {
+                val loc = Location.fromSnapShot(document)
+                locs.add(loc.name)
+                locMap[loc.name] = loc.id
+            }
+            val locAdapter = ArrayAdapter<String>(activity, R.layout.support_simple_spinner_dropdown_item, locs)
+            view.event_location_input.adapter = locAdapter
+        }
+
         view.submit_button.setOnClickListener {
-            // TODO: Get locations
-            val location = Location(event_location_input.text.toString())
-            val user = User()
             // TODO: Add input validation
-            val event = Event(event_title_input.text.toString(), event_description_input.text.toString(), event_date_input.text.toString().toLong(), user, location, ArrayList(), ArrayList())
+            val event = Event(
+                event_title_input.text.toString(),
+                event_description_input.text.toString(),
+                event_date_input.text.toString().toLong(),
+                loggedInUser ?: "",
+                locMap[event_location_input.selectedItem]!!,
+                ArrayList(),
+                ArrayList())
             eventsRef.add(event).addOnSuccessListener {
                 val ft = activity!!.supportFragmentManager.beginTransaction()
                 ft.replace(R.id.fragment_container, EventDetailFragment.newInstance(event), getString(R.string.event_list_stack))
@@ -71,11 +85,10 @@ class EditEventFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(uid: String) =
             EditEventFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putString(ARG_UID, uid)
                 }
             }
     }

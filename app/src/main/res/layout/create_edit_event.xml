@@ -65,13 +65,10 @@
                 android:textSize="20sp"
                 android:textColor="@color/colorSecondary"/>
 
-        <EditText
+        <Spinner
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorSecondary"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:textColorHint="@color/colorSecondary"
+                android:layout_height="40dp"
+                android:background="@android:drawable/btn_dropdown"
                 android:id="@+id/event_location_input"/>
 
         <TextView
@@ -109,7 +106,6 @@
                 android:ems="10"
                 android:textColorHint="@color/colorSecondary"
                 android:id="@+id/event_description_input"/>
-
 
     </LinearLayout>
 

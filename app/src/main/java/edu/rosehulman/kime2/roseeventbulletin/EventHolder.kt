@@ -8,6 +8,7 @@ class EventHolder(eventView: View, var adapter: ListAdapter): RecyclerView.ViewH
     val eventName = eventView.findViewById<TextView>(R.id.event_list_title)
     val eventDate = eventView.findViewById<TextView>(R.id.event_list_date)
     val eventLocation = eventView.findViewById<TextView>(R.id.event_list_location)
+    val dataService = DataService()
 
     init {
         eventView.setOnClickListener {
@@ -18,6 +19,7 @@ class EventHolder(eventView: View, var adapter: ListAdapter): RecyclerView.ViewH
     fun bind(event: Event) {
         eventName.text = event.name
         eventDate.text = event.date.toString()
-        eventLocation.text = event.location.name
+        dataService.getLocationByUID(event.location).addOnSuccessListener { eventLocation.text = it.getString("name") }
+
     }
 }

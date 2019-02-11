@@ -31,7 +31,6 @@
         </TableRow>
         <TableRow android:padding="10dp">
             <TextView
-                android:text="@string/event_host"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:textColor="@color/colorSecondary"
@@ -39,7 +38,6 @@
                 android:id="@+id/event_detail_host"
             />
             <TextView
-                android:text="@string/event_location"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:textColor="@color/colorSecondary"

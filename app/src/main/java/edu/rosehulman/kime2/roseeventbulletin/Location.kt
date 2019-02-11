@@ -1,33 +1,22 @@
 package edu.rosehulman.kime2.roseeventbulletin
 
-import android.os.Parcel
-import android.os.Parcelable
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Exclude
 
 data class Location(var name: String = "location name",
-                    var events: List<Event> = ArrayList()
-): Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        parcel.createTypedArrayList(Event)
-    ) {
+                    var events: List<String> = ArrayList()
+){
+    @get:Exclude
+    var id = ""
+
+    override fun toString(): String {
+        return "Name: $name, Events: $events"
     }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(name)
-        parcel.writeTypedList(events)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<Location> {
-        override fun createFromParcel(parcel: Parcel): Location {
-            return Location(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Location?> {
-            return arrayOfNulls(size)
+    companion object {
+        fun fromSnapShot(snapshot: DocumentSnapshot): Location {
+            val loc = snapshot.toObject(Location::class.java)!!
+            loc.id = snapshot.id
+            return loc
         }
     }
 }

@@ -28,8 +28,7 @@
                       android:layout_height="wrap_content"
                       android:textSize="20sp"
                       android:id="@+id/event_list_location"
-                      android:layout_below="@+id/event_list_date"
-                      android:text="@string/event_location"/>
+                      android:layout_below="@+id/event_list_date"/>
         </RelativeLayout>
 
 </android.support.v7.widget.CardView>

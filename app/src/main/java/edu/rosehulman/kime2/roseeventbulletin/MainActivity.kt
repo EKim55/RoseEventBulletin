@@ -17,16 +17,18 @@ import edu.rosehulman.rosefire.Rosefire
 import android.content.Intent
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import layout.Constants
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, ListFragment.OnEventSelectedListener, SplashFragment.OnLoginButtonPressedListener {
 
+    val dataService = DataService()
     val auth = FirebaseAuth.getInstance()
     lateinit var authListener: FirebaseAuth.AuthStateListener
     private val RC_ROSEFIRE_LOGIN = 1
-    private var loggedInUser: FirebaseUser? = null
+    private var loggedInUser: String = ""
     private val userRef = FirebaseFirestore.getInstance().collection("users")
 
-    fun onRosefireLogin() {
+    private fun onRosefireLogin() {
         val signInIntent = Rosefire.getSignInIntent(this, getString(R.string.token))
         startActivityForResult(signInIntent, RC_ROSEFIRE_LOGIN)
     }
@@ -37,6 +39,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val result = Rosefire.getSignInResultFromIntent(data)
             if (result.isSuccessful) {
                 auth.signInWithCustomToken(result.token)
+                Log.d(Constants.USER_LOG, "Username: ${result.username}")
+                Log.d(Constants.USER_LOG, "Name: ${result.name}")
+                Log.d(Constants.USER_LOG, "Email: ${result.email}")
+                Log.d(Constants.USER_LOG, "Group: ${result.group}")
+                userRef
+                    .whereEqualTo("username", result.username)
+                    .get()
+                    .addOnSuccessListener {
+                    if (!it.isEmpty) {
+                        Log.d(Constants.USER_LOG, "User exists: ${it.documents}")
+                        loggedInUser = User.fromSnapShot(it.documents[0]).id
+                    } else {
+                        Log.d(Constants.USER_LOG, "First time logging in: ${result.username}")
+                        loggedInUser = result.username
+                        val user = User(result.username, "", result.name, result.email)
+                        userRef.add(user)
+                    }
+                }
             } else {
                 // Failed
             }
@@ -58,7 +78,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         fab.setOnClickListener {
             val ft = supportFragmentManager.beginTransaction()
-            ft.replace(R.id.fragment_container, EditEventFragment(), getString(R.string.event_list_stack))
+            ft.replace(R.id.fragment_container, EditEventFragment.newInstance(loggedInUser), getString(R.string.event_list_stack))
             ft.addToBackStack("create")
             ft.commit()
         }
@@ -76,21 +96,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun initializeListener() {
         authListener = FirebaseAuth.AuthStateListener { auth ->
-            val user = auth.currentUser
-            loggedInUser = user
-            if (user != null) {
-                Log.d("USER", "UID: ${user.uid}")
-                // TODO: Fix this check. Need to use Firebase id instead of RoseFire UID
-                userRef.document(user.uid).get().addOnSuccessListener {
-                    if (it.exists()) {
-                        Log.d("USER", it.toString())
-                    } else {
-                        Log.d("USER", "First time logging in: ${user.uid}")
-                        userRef.add(user)
-                    }
-                }
-
-                switchToListFragment(user.uid)
+            val fbUser = auth.currentUser
+//            dataService.getUserIDByUsername(fbUser.uid)
+            if (auth.currentUser != null) {
+                switchToListFragment(loggedInUser)
             } else {
                 switchToSplashFragment()
             }
@@ -162,8 +171,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var switchTo: Fragment? = null
         when (item.itemId) {
             R.id.nav_events -> {
-                if (loggedInUser != null) {
-                    switchToListFragment(loggedInUser!!.uid)
+                if (auth.currentUser != null) {
+                    switchToListFragment(loggedInUser)
                 } else {
                     switchToSplashFragment()
                 }
@@ -172,7 +181,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.nav_profile-> {
-                switchToProfileFragment(loggedInUser!!.uid)
+                switchToProfileFragment(loggedInUser)
             }
             R.id.logout-> {
                 auth.signOut()

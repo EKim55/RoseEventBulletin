@@ -4,11 +4,13 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
+import layout.Constants
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -27,6 +29,7 @@ private const val ARG_USER = "ARG_USER"
 class ProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var uid: String? = null
+    val dataService = DataService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +45,11 @@ class ProfileFragment : Fragment() {
         activity!!.fab.hide()
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
-        view.full_name
+        dataService.getUserByUid(uid!!).addOnSuccessListener {
+            view.full_name.text = it.getString("name")
+            view.username.text = it.getString("username")
+            view.email.text = it.getString("email")
+        }
         return view
     }
 
