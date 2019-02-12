@@ -17,6 +17,8 @@ import java.lang.RuntimeException
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_UID = "ARG_UID"
+private const val ARG_FILTER = "ARG_FILTER"
+private const val ARG_FILTER_FIELD = "ARG_FILTER_FIELD"
 
 /**
  * A simple [Fragment] subclass.
@@ -29,10 +31,16 @@ class ListFragment : Fragment() {
     var adapter: ListAdapter? = null
     private var listener: OnEventSelectedListener? = null
 
+    private var uid: String? = null
+    private var filtered: Boolean? = null
+    private var filterField: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            // TODO: Do stuff with variables
+            uid = it.getString(ARG_UID)
+            filtered = it.getBoolean(ARG_FILTER)
+            filterField = it.getString(ARG_FILTER_FIELD)
         }
     }
 
@@ -40,7 +48,11 @@ class ListFragment : Fragment() {
         activity!!.fab.show()
         val view = inflater.inflate(R.layout.event_list, container, false) as RecyclerView
         adapter = ListAdapter(activity, listener)
-        adapter!!.addSnapshotListener()
+        if (filtered!!) {
+            adapter!!.addSnapshotListener(true, filterField!!, uid!!)
+        } else {
+            adapter!!.addSnapshotListener(false)
+        }
         view.setHasFixedSize(true)
         view.layoutManager = LinearLayoutManager(activity)
         view.adapter = adapter
@@ -67,10 +79,12 @@ class ListFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(uid: String) =
+        fun newInstance(uid: String, filtered: Boolean = false, filterField: String = "") =
             ListFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_UID, uid)
+                    putBoolean(ARG_FILTER, filtered)
+                    putString(ARG_FILTER_FIELD, filterField)
                 }
             }
     }

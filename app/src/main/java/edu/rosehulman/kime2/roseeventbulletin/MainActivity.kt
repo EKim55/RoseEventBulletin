@@ -81,6 +81,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             ft.addToBackStack("create")
             ft.commit()
         }
+        fab.hide()
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -97,9 +98,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         authListener = FirebaseAuth.AuthStateListener { auth ->
                 if (auth.currentUser != null) {
                         dataService.getUserIDByUsername(auth.currentUser!!.uid).addOnSuccessListener {
-                        Log.d("LOGIN","${it.documents[0].id}")
                         val uid = it.documents[0].id
-                        loggedInUser = uid!!
+                        loggedInUser = uid
                         switchToListFragment(loggedInUser)
                     }
                 } else {

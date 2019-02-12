@@ -21,14 +21,25 @@ class ListAdapter(val context: Context?, var listener: ListFragment.OnEventSelec
         return events.size
     }
 
-    fun addSnapshotListener() {
-        eventsRef
-            .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
-            if (firebaseFirestoreException != null) {
+    fun addSnapshotListener(filter: Boolean, filterField: String = "", filterValue: String = "") {
+        if (!filter) {
+            eventsRef
+                .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                if (firebaseFirestoreException != null) {
 
-            } else {
-                processSnapshotData(querySnapshot!!)
+                } else {
+                    processSnapshotData(querySnapshot!!)
+                }
             }
+        } else {
+            eventsRef
+                .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                    if (firebaseFirestoreException != null) {
+
+                    } else {
+                        processFilteredSnapshotData(querySnapshot!!, filterField, filterValue)
+                    }
+                }
         }
     }
 
@@ -59,6 +70,63 @@ class ListAdapter(val context: Context?, var listener: ListFragment.OnEventSelec
                             events[k] = event
                             notifyItemChanged(k)
                             break
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun processFilteredSnapshotData(querySnapshot: QuerySnapshot, filterField: String, filterValue: String) {
+        for (documentChange in querySnapshot.documentChanges) {
+            val event = Event.fromSnapshot(documentChange.document)
+            if (filterField == "attendees" && event.attendees.contains(filterValue)) {
+                when(documentChange.type) {
+                    DocumentChange.Type.ADDED -> {
+                        events.add(0, event)
+                        notifyItemInserted(0)
+                    }
+                    DocumentChange.Type.REMOVED -> {
+                        for ((k, ev) in events.withIndex()) {
+                            if (ev.id == event.id) {
+                                events.removeAt(k)
+                                notifyItemRemoved(k)
+                                break
+                            }
+                        }
+                    }
+                    DocumentChange.Type.MODIFIED -> {
+                        for ((k, ev) in events.withIndex()) {
+                            if (ev.id == event.id) {
+                                events[k] = event
+                                notifyItemChanged(k)
+                                break
+                            }
+                        }
+                    }
+                }
+            } else if (filterField == "owner" && event.owner == filterValue) {
+                when(documentChange.type) {
+                    DocumentChange.Type.ADDED -> {
+                        events.add(0, event)
+                        notifyItemInserted(0)
+                    }
+                    DocumentChange.Type.REMOVED -> {
+                        for ((k, ev) in events.withIndex()) {
+                            if (ev.id == event.id) {
+                                events.removeAt(k)
+                                notifyItemRemoved(k)
+                                break
+                            }
+                        }
+                    }
+                    DocumentChange.Type.MODIFIED -> {
+                        for ((k, ev) in events.withIndex()) {
+                            if (ev.id == event.id) {
+                                events[k] = event
+                                notifyItemChanged(k)
+                                break
+                            }
                         }
                     }
                 }

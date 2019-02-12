@@ -50,6 +50,18 @@ class ProfileFragment : Fragment() {
             view.username.text = it.getString("username")
             view.email.text = it.getString("email")
         }
+        view.hosted_events_button.setOnClickListener {
+            val ft = activity!!.supportFragmentManager.beginTransaction()
+            ft.replace(R.id.fragment_container, ListFragment.newInstance(uid!!, true, "owner"), getString(R.string.event_list_stack))
+            ft.addToBackStack(getString(R.string.event_list_stack))
+            ft.commit()
+        }
+        view.attending_events_button.setOnClickListener {
+            val ft = activity!!.supportFragmentManager.beginTransaction()
+            ft.replace(R.id.fragment_container, ListFragment.newInstance(uid!!, true, "attendees"), getString(R.string.event_list_stack))
+            ft.addToBackStack(getString(R.string.event_list_stack))
+            ft.commit()
+        }
         return view
     }
 
