@@ -95,13 +95,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun initializeListener() {
         authListener = FirebaseAuth.AuthStateListener { auth ->
-            val fbUser = auth.currentUser
-//            dataService.getUserIDByUsername(fbUser.uid)
-            if (auth.currentUser != null) {
-                switchToListFragment(loggedInUser)
-            } else {
-                switchToSplashFragment()
-            }
+                if (auth.currentUser != null) {
+                        dataService.getUserIDByUsername(auth.currentUser!!.uid).addOnSuccessListener {
+                        Log.d("LOGIN","${it.documents[0].id}")
+                        val uid = it.documents[0].id
+                        loggedInUser = uid!!
+                        switchToListFragment(loggedInUser)
+                    }
+                } else {
+                    switchToSplashFragment()
+                }
         }
     }
 

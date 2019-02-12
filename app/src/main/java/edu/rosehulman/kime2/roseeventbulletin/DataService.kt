@@ -59,4 +59,8 @@ class DataService {
             }
         }
     }
+
+    fun getUserIDByUsername(username: String): Task<QuerySnapshot> {
+        return usersRef.whereEqualTo("username", username).get()
+    }
 }
