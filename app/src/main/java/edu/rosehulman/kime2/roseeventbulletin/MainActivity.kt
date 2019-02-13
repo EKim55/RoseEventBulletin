@@ -38,6 +38,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.d(Constants.USER_LOG, "FAILED")
+
         if (resultCode == Activity.RESULT_OK && requestCode == RC_ROSEFIRE_LOGIN) {
             val result = Rosefire.getSignInResultFromIntent(data)
             if (result.isSuccessful) {
@@ -62,6 +64,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             } else {
                 // Failed
+                Log.d(Constants.USER_LOG, "FAILED")
             }
         }
     }
@@ -100,15 +103,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun initializeListener() {
         authListener = FirebaseAuth.AuthStateListener { auth ->
-                if (auth.currentUser != null) {
-                        dataService.getUserIDByUsername(auth.currentUser!!.uid).addOnSuccessListener {
-                        val uid = it.documents[0].id
-                        loggedInUser = uid
-                        switchToListFragment(loggedInUser)
-                    }
-                } else {
-                    switchToSplashFragment()
+            if (auth.currentUser != null) {
+                Log.d(Constants.USER_LOG, auth.currentUser!!.uid)
+                dataService.getUserIDByUsername(auth.currentUser!!.uid).addOnSuccessListener {
+                    val uid = it.documents[0].id
+                    loggedInUser = uid
+                    switchToListFragment(loggedInUser)
                 }
+            } else {
+                switchToSplashFragment()
+            }
         }
     }
 
@@ -194,14 +198,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.action_edit -> {
-                return true
+                false
             }
             R.id.action_delete -> {
-                return true
+                false
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

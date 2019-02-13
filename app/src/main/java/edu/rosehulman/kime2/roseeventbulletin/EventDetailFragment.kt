@@ -1,18 +1,16 @@
 package edu.rosehulman.kime2.roseeventbulletin
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
+import android.view.*
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.event_details.*
 import kotlinx.android.synthetic.main.event_details.view.*
+import android.view.MenuInflater
+
+
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,13 +27,19 @@ private const val ARG_USER = "ARG_USER"
  *
  */
 class EventDetailFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var event: Event? = null
     private val dataService = DataService()
     private var uid: String? = null
     private var attending = false
+
+
+    private val eventsRef = FirebaseFirestore.getInstance().collection("events")
+    private val usersRef = FirebaseFirestore.getInstance().collection("users")
+    private val locRef = FirebaseFirestore.getInstance().collection("locations")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         arguments?.let {
             event = it.getParcelable(ARG_PARAM1)
             uid = it.getString(ARG_USER)
@@ -43,16 +47,34 @@ class EventDetailFragment : Fragment() {
         if (event?.attendees!!.contains(uid)) {
             attending = true
         }
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        Log.d("TESTING","deleting")
+        return when (item.itemId) {
             R.id.action_edit -> {
-                return true
+                true
             }
             R.id.action_delete -> {
-                return true
+                // DONE: Delete from Events collection
+                eventsRef.document(event!!.id).delete()
+                // DONE: Delete from Users collection Owned
+                // DONE: Delete from all user's attending lists
+                usersRef.get().addOnSuccessListener {
+                    for (document in it.documents) {
+                        var user = User.fromSnapShot(document)
+                        user.attending.remove(uid!!)
+                        user.owned.remove(event!!.id)
+                        usersRef.document().set(user)
+                    }
+                }
+                // DONE: Delete from Locations collection events list
+                locRef.document(event!!.location).get().addOnSuccessListener {
+                    val loc = Location.fromSnapShot(it)
+                    loc.events.remove(event!!.id)
+                    locRef.document(event!!.location).set(loc)
+                }
+                true
             }
             else -> return super.onOptionsItemSelected(item)
         }
@@ -63,11 +85,45 @@ class EventDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         activity!!.fab.hide()
-        if (uid == event!!.owner) {
-            val activ = activity!! as MainActivity
-            activ.setMenuVisible(true)
-        }
         val view = inflater.inflate(R.layout.event_details, container, false)
+        if (uid != event!!.owner) {
+            view.delete_button.visibility = View.GONE
+            view.edit_button.visibility = View.GONE
+        } else {
+            view.delete_button.setOnClickListener {
+                Log.d("TESTING", "EVENT ID IS ${event!!.id}")
+                // DONE: Delete from Events collection
+                eventsRef.document(event!!.id).delete()
+                // DONE: Delete from Users collection Owned
+                // DONE: Delete from all user's attending lists
+                usersRef.get().addOnSuccessListener {
+                    for (document in it.documents) {
+                        var user = User.fromSnapShot(document)
+                        var edited = false
+                        if (user.attending.contains(event!!.id)) {
+                            user.attending.remove(event!!.id!!)
+                            edited = true
+                        }
+                        if (user.owned.contains(event!!.id)) {
+                            user.owned.remove(event!!.id)
+                            edited = true
+                        }
+                        if (edited) {
+                            usersRef.document(user.id).set(user)
+                        }
+                    }
+                }
+                // DONE: Delete from Locations collection events list
+                locRef.document(event!!.location).get().addOnSuccessListener {
+                    val loc = Location.fromSnapShot(it)
+                    loc.events.remove(event!!.id)
+                    locRef.document(event!!.location).set(loc)
+                }
+                activity!!.onBackPressed()
+            }
+        }
+
+
         view.attending_fab.setOnClickListener {
             this.attending = !this.attending
             if (this.attending) {
