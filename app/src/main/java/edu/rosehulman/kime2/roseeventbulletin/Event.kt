@@ -10,7 +10,7 @@ import kotlin.collections.ArrayList
 
 data class Event(var name: String = "event name",
                  var description: String = "event description",
-                 var date: Long = 1,
+                 var date: String = "",
                  var owner: String = "",
                  var location: String = "",
                  var attendees: ArrayList<String> = ArrayList(),
@@ -21,7 +21,7 @@ data class Event(var name: String = "event name",
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
-        parcel.readLong(),
+        parcel.readString(),
         parcel.readString(),
         parcel.readString(),
         parcel.createStringArrayList(),
@@ -33,7 +33,7 @@ data class Event(var name: String = "event name",
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(name)
         parcel.writeString(description)
-        parcel.writeLong(date)
+        parcel.writeString(date)
         parcel.writeString(owner)
         parcel.writeString(location)
         parcel.writeStringList(attendees)

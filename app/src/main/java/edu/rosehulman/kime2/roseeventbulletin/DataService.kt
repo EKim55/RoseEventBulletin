@@ -71,4 +71,14 @@ class DataService {
     fun getUserIDByUsername(username: String): Task<QuerySnapshot> {
         return usersRef.whereEqualTo("username", username).get()
     }
+
+    fun removeEventFromLoc(eventId: String, location: String) {
+        locationsRef.document(location).get().addOnSuccessListener {
+            val loc = Location.fromSnapShot(it)
+            if (loc.events.contains(eventId)) {
+                loc.events.remove(eventId)
+            }
+            locationsRef.document(location).set(loc)
+        }
+    }
 }

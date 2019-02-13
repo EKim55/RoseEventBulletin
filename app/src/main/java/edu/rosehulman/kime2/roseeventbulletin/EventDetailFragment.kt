@@ -7,9 +7,6 @@ import android.view.*
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.event_details.view.*
-import android.view.MenuInflater
-
-
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -120,6 +117,12 @@ class EventDetailFragment : Fragment() {
                     locRef.document(event!!.location).set(loc)
                 }
                 activity!!.onBackPressed()
+            }
+            view.edit_button.setOnClickListener {
+                val ft = activity!!.supportFragmentManager.beginTransaction()
+                ft.replace(R.id.fragment_container, EditEventFragment.newInstance(uid!!, event!!), getString(R.string.event_list_stack))
+                ft.addToBackStack("create")
+                ft.commit()
             }
         }
 

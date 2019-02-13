@@ -1,7 +1,6 @@
 package edu.rosehulman.kime2.roseeventbulletin
 
 import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
@@ -16,8 +15,6 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import com.google.firebase.auth.FirebaseAuth
 import edu.rosehulman.rosefire.Rosefire
 import android.content.Intent
-import android.util.AttributeSet
-import android.view.View
 import com.google.firebase.firestore.FirebaseFirestore
 import layout.Constants
 
