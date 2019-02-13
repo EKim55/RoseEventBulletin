@@ -66,8 +66,8 @@ class EditEventFragment : Fragment() {
                 ArrayList())
             eventsRef.add(event).addOnSuccessListener {
                 Log.d("TESTING", "id " + it.id)
-                //dataService.setAttending(loggedInUser!!, event.id, true)
-                //dataService.addEventToLoc(event.id, locMap[event_location_input.selectedItem]!!)
+                dataService.setAttending(loggedInUser!!, it.id, true)
+                dataService.addEventToLoc(it.id, locMap[event_location_input.selectedItem]!!)
                 val ft = activity!!.supportFragmentManager.beginTransaction()
                 ft.replace(R.id.fragment_container, EventDetailFragment.newInstance(event, loggedInUser!!), getString(R.string.event_list_stack))
                 ft.commit()
