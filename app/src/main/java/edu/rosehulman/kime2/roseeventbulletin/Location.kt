@@ -4,6 +4,8 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Exclude
 
 data class Location(var name: String = "location name",
+                    var lat: Double = 0.0,
+                    var lng: Double = 0.0,
                     var events: ArrayList<String> = ArrayList()
 ){
     @get:Exclude

@@ -130,6 +130,31 @@ class ListAdapter(val context: Context?, var listener: ListFragment.OnEventSelec
                         }
                     }
                 }
+            } else if (filterField == "location" && event.location == filterValue) {
+                when(documentChange.type) {
+                    DocumentChange.Type.ADDED -> {
+                        events.add(0, event)
+                        notifyItemInserted(0)
+                    }
+                    DocumentChange.Type.REMOVED -> {
+                        for ((k, ev) in events.withIndex()) {
+                            if (ev.id == event.id) {
+                                events.removeAt(k)
+                                notifyItemRemoved(k)
+                                break
+                            }
+                        }
+                    }
+                    DocumentChange.Type.MODIFIED -> {
+                        for ((k, ev) in events.withIndex()) {
+                            if (ev.id == event.id) {
+                                events[k] = event
+                                notifyItemChanged(k)
+                                break
+                            }
+                        }
+                    }
+                }
             }
         }
     }
