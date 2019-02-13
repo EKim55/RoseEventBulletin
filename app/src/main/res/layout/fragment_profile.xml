@@ -22,7 +22,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/profile_picture"
-            android:text="@string/name"
             android:textSize="24sp"
             android:id="@+id/full_name"
     />
@@ -31,7 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/full_name"
-            android:text="@string/username"
             android:textSize="24sp"
             android:id="@+id/username"
     />
@@ -40,7 +38,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/username"
-            android:text="@string/email"
             android:textSize="24sp"
             android:id="@+id/email"
     />

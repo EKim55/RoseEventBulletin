@@ -38,4 +38,6 @@
     <string name="hosted_events">Hosted Events</string>
     <string name="email">Email</string>
     <string name="logout">Logout</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>

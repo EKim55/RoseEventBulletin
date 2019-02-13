@@ -32,6 +32,14 @@ class DataService {
             .get()
     }
 
+    fun addEventToLoc(eventid: String, locid: String) {
+        locationsRef.document(locid).get().addOnSuccessListener {
+            val location = Location.fromSnapShot(it)
+            location.events.add(eventid)
+            locationsRef.document(locid).set(location)
+        }
+    }
+
     fun setAttending(uid: String, eventId: String, isAttending: Boolean) {
         if (isAttending) {
             usersRef.document(uid).get().addOnSuccessListener {
