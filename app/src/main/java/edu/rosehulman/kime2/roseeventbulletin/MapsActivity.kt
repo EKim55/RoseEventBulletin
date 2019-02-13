@@ -28,8 +28,6 @@ import java.util.HashMap
 class MapsActivity : Fragment(), OnMapReadyCallback {
     private val dataService = DataService()
 
-    private val REQUEST_LOCATION_PERMISSION = 2
-
     private lateinit var mMap: GoogleMap
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -47,7 +45,6 @@ class MapsActivity : Fragment(), OnMapReadyCallback {
 //        val mapFragment = supportFragmentManager
 //            .findFragmentById(R.id.map) as SupportMapFragment
         fragment.getMapAsync(this)
-        enableMyLocation()
         return view
     }
 
@@ -84,28 +81,5 @@ class MapsActivity : Fragment(), OnMapReadyCallback {
         }
         val rose = LatLng(39.483592, -87.326766)
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rose, 19f))
-    }
-
-    private fun enableMyLocation() {
-        if (ContextCompat.checkSelfPermission(context!!,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-        } else {
-            ActivityCompat.requestPermissions(activity!!,
-                arrayOf(Manifest.permission.READ_CONTACTS),
-                REQUEST_LOCATION_PERMISSION)
-
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when(requestCode) {
-            REQUEST_LOCATION_PERMISSION -> {
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    enableMyLocation()
-                }
-            }
-        }
     }
 }
