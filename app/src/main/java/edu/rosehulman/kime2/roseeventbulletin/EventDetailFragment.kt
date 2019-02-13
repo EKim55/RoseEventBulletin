@@ -43,7 +43,6 @@ class EventDetailFragment : Fragment() {
         if (event?.attendees!!.contains(uid)) {
             attending = true
         }
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
