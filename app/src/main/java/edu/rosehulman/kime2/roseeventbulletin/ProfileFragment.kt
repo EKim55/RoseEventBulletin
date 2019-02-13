@@ -51,18 +51,19 @@ class ProfileFragment : Fragment() {
             view.email.text = it.getString("email")
         }
         view.hosted_events_button.setOnClickListener {
-            val ft = activity!!.supportFragmentManager.beginTransaction()
-            ft.replace(R.id.fragment_container, ListFragment.newInstance(uid!!, true, "owner"), getString(R.string.event_list_stack))
-            ft.addToBackStack(getString(R.string.event_list_stack))
-            ft.commit()
+            swapToFilteredList("owner")
         }
         view.attending_events_button.setOnClickListener {
-            val ft = activity!!.supportFragmentManager.beginTransaction()
-            ft.replace(R.id.fragment_container, ListFragment.newInstance(uid!!, true, "attendees"), getString(R.string.event_list_stack))
-            ft.addToBackStack(getString(R.string.event_list_stack))
-            ft.commit()
+            swapToFilteredList("attendees")
         }
         return view
+    }
+
+    private fun swapToFilteredList(filter: String) {
+        val ft = activity!!.supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, ListFragment.newInstance(uid!!, true, filter), getString(R.string.event_list_stack))
+        ft.addToBackStack(getString(R.string.event_list_stack))
+        ft.commit()
     }
 
     companion object {
