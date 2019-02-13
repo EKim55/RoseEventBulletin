@@ -13,8 +13,7 @@ data class Event(var name: String = "event name",
                  var date: String = "",
                  var owner: String = "",
                  var location: String = "",
-                 var attendees: ArrayList<String> = ArrayList(),
-                 var tags: ArrayList<String> = ArrayList()
+                 var attendees: ArrayList<String> = ArrayList()
 ): Parcelable {
     @get:Exclude var id = ""
 
@@ -24,7 +23,6 @@ data class Event(var name: String = "event name",
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.createStringArrayList(),
         parcel.createStringArrayList()
     ) {
         id = parcel.readString()
@@ -37,7 +35,6 @@ data class Event(var name: String = "event name",
         parcel.writeString(owner)
         parcel.writeString(location)
         parcel.writeStringList(attendees)
-        parcel.writeStringList(tags)
         parcel.writeString(id)
     }
 

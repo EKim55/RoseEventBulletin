@@ -78,7 +78,6 @@ class EditEventFragment : Fragment() {
                     event_date_input.text.toString(),
                     loggedInUser ?: "",
                     locMap[event_location_input.selectedItem]!!,
-                    ArrayList(),
                     ArrayList())
                 eventsRef.add(event).addOnSuccessListener {
                     Log.d("TESTING", "id " + it.id)
@@ -96,8 +95,7 @@ class EditEventFragment : Fragment() {
                     event_date_input.text.toString(),
                     loggedInUser ?: "",
                     locMap[event_location_input.selectedItem]!!,
-                    event!!.attendees,
-                    ArrayList()
+                    event!!.attendees
                 )
                 eventsRef.document(event!!.id).set(editedEvent).addOnSuccessListener {
                     dataService.addEventToLoc(event!!.id, locMap[event_location_input.selectedItem]!!)

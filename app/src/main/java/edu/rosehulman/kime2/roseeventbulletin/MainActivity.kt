@@ -15,7 +15,9 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import com.google.firebase.auth.FirebaseAuth
 import edu.rosehulman.rosefire.Rosefire
 import android.content.Intent
+import android.support.v4.widget.DrawerLayout
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 import layout.Constants
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, ListFragment.OnEventSelectedListener, SplashFragment.OnLoginButtonPressedListener {
@@ -108,6 +110,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     switchToListFragment(loggedInUser)
                 }
             } else {
+                drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 switchToSplashFragment()
             }
         }
@@ -139,6 +142,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun switchToListFragment(uid: String) {
         if (this.menu != null) {
             setMenuVisible(false)
+        }
+        drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        dataService.getUserByUid(uid!!).addOnSuccessListener {
+            drawer_layout.drawer_name.text = it.getString("name")
+            drawer_layout.drawer_email.text = it.getString("email")
         }
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, ListFragment.newInstance(uid), getString(R.string.event_list_stack))
@@ -229,6 +237,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.logout-> {
                 auth.signOut()
+                fab.hide()
+                drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             }
         }
         if (switchTo != null) {
