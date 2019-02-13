@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -45,11 +46,27 @@ class EventDetailFragment : Fragment() {
 
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_edit -> {
+                return true
+            }
+            R.id.action_delete -> {
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         activity!!.fab.hide()
+        if (uid == event!!.owner) {
+            val activ = activity!! as MainActivity
+            activ.setMenuVisible(true)
+        }
         val view = inflater.inflate(R.layout.event_details, container, false)
         view.attending_fab.setOnClickListener {
             this.attending = !this.attending

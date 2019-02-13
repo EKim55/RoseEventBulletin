@@ -1,6 +1,7 @@
 package edu.rosehulman.kime2.roseeventbulletin
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
@@ -15,6 +16,8 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import com.google.firebase.auth.FirebaseAuth
 import edu.rosehulman.rosefire.Rosefire
 import android.content.Intent
+import android.util.AttributeSet
+import android.view.View
 import com.google.firebase.firestore.FirebaseFirestore
 import layout.Constants
 
@@ -26,6 +29,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val RC_ROSEFIRE_LOGIN = 1
     private var loggedInUser: String = ""
     private val userRef = FirebaseFirestore.getInstance().collection("users")
+    private var menu: Menu? = null
 
     private fun onRosefireLogin() {
         val signInIntent = Rosefire.getSignInIntent(this, getString(R.string.token))
@@ -109,12 +113,32 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun switchToSplashFragment() {
+        if (this.menu != null) {
+            setMenuVisible(false)
+        }
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, SplashFragment())
         ft.commit()
     }
 
+
+
+    private fun switchToMapFragment() {
+        if (this.menu != null) {
+            setMenuVisible(false)
+        }
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, MapsActivity())
+        while (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStackImmediate()
+        }
+        ft.commit()
+    }
+
     private fun switchToListFragment(uid: String) {
+        if (this.menu != null) {
+            setMenuVisible(false)
+        }
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, ListFragment.newInstance(uid), getString(R.string.event_list_stack))
         while (supportFragmentManager.backStackEntryCount > 0) {
@@ -123,6 +147,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         ft.commit()
     }
     private fun switchToProfileFragment(uid: String) {
+        if (this.menu != null) {
+            setMenuVisible(false)
+        }
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, ProfileFragment.newInstance(uid), getString(R.string.event_list_stack))
         while (supportFragmentManager.backStackEntryCount > 0) {
@@ -149,12 +176,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
+            if (this.menu != null) {
+                setMenuVisible(false)
+            }
             super.onBackPressed()
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
+        this.menu = menu
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
@@ -164,9 +195,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
-            R.id.action_settings -> return true
+            R.id.action_edit -> {
+                return true
+            }
+            R.id.action_delete -> {
+                return true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    fun setMenuVisible(boolean: Boolean) {
+        menu!!.findItem(R.id.action_edit).isVisible = boolean
+        menu!!.findItem(R.id.action_delete).isVisible = boolean
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -180,7 +221,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             R.id.nav_map -> {
-
+                switchToMapFragment()
             }
             R.id.nav_profile-> {
                 switchToProfileFragment(loggedInUser)

@@ -2,6 +2,7 @@ package edu.rosehulman.kime2.roseeventbulletin
 
 import android.os.Parcel
 import android.os.Parcelable
+import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.QueryDocumentSnapshot
